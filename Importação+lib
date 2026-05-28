@@ -1,0 +1,11 @@
+!pip install -q -U transformers bitsandbytes accelerate sentence-transformers chromadb
+!pip install flash-attn --no-build-isolation
+
+import torch
+import time
+import random
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+
+print(torch.cuda.is_available())
+print(torch.cuda.get_device_name(0))
