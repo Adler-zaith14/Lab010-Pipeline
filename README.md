@@ -11,7 +11,6 @@
 
 Este laboratório foi desenvolvido de forma individual, com base nos materiais disponibilizados em aula e nas documentações oficiais das bibliotecas utilizadas. Os erros encontrados durante a execução foram identificados e corrigidos manualmente. Durante o desenvolvimento, identifiquei que o parâmetro `attn_implementation="sdpa"` não era a configuração correta, então tive que mudar para `attn_implementation="flash_attention_2"`. Também corrigi outros parâmetros e pedi auxílio à IA para organizar o versionamento. Todo esse processo de depuração e correção foi realizado por mim ao longo da execução do laboratório.
 
-> *"Partes deste laboratório foram geradas/complementadas com IA, revisadas e validadas por Adler Castro Alves"*
 
 ---
 
