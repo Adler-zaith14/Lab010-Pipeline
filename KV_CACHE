@@ -1,0 +1,15 @@
+print("\n[PASSO 3] Gerando sem KV Cache (use_cache=False)...")
+model.config.use_cache = False
+torch.cuda.reset_peak_memory_stats()
+inicio = time.time()
+
+saida = model.generate(**tokens, max_new_tokens=100, do_sample=False)
+
+fim = time.time()
+tempo_sem_cache = fim - inicio
+vram_sem_cache = torch.cuda.max_memory_allocated() / 1024**2
+
+texto_gerado = tokenizer.decode(saida[0][-100:], skip_special_tokens=True)
+print(f"  Saída (sem cache): {texto_gerado[:200]}...")
+print(f"  Tempo sem cache:   {tempo_sem_cache:.2f}s")
+print(f"  Pico VRAM:         {vram_sem_cache:.2f} MB")
