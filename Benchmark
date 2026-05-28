@@ -1,0 +1,12 @@
+speedup = tempo_sem_cache / tempo_otimizado
+delta_vram = ((vram_sem_cache - vram_otimizado) / vram_sem_cache) * 100
+
+print("\n========== BENCHMARK COMPARATIVO ==========")
+print(f"{'Métrica':<30} {'Sem Cache':>15} {'Otimizado':>15}")
+print("-" * 62)
+print(f"{'Tempo de geração (s)':<30} {tempo_sem_cache:>15.2f} {tempo_otimizado:>15.2f}")
+print(f"{'Pico VRAM (MB)':<30} {vram_sem_cache:>15.2f} {vram_otimizado:>15.2f}")
+print(f"{'Speedup':<30} {'—':>15} {speedup:>14.2f}x")
+print(f"{'Variação de VRAM':<30} {'—':>15} {delta_vram:>13.1f}%")
+print(f"{'VRAM na carga (QLoRA)':<30} {vram_carga:>15.2f} {'—':>15}")
+print("===========================================")
