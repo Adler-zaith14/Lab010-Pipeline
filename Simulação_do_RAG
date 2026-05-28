@@ -1,0 +1,57 @@
+frases_medicas = [
+    "Protocolo clínico para insuficiência cardíaca severa requer monitoramento contínuo da pressão arterial e saturação de oxigênio.",
+    "O diagnóstico diferencial entre pneumonia bacteriana e viral exige análise do leucograma e PCR quantitativo.",
+    "Pacientes com diabetes mellitus tipo 2 devem ter HbA1c monitorada trimestralmente conforme diretriz da SBD.",
+    "A prescrição de anticoagulantes em fibrilação atrial segue o escore CHA2DS2-VASc para estratificação de risco.",
+    "Insuficiência renal crônica em estágio 3 requer ajuste posológico de medicamentos de excreção renal.",
+    "O manejo da sepse inclui administração de antibióticos de amplo espectro na primeira hora após identificação.",
+    "Hipertensão arterial resistente é definida como PA não controlada com três anti-hipertensivos em doses máximas.",
+    "O protocolo de AVC isquêmico prevê janela terapêutica de 4,5 horas para trombólise com rt-PA.",
+    "Pacientes oncológicos em quimioterapia necessitam de monitoramento de neutrófilos para prevenir neutropenia febril.",
+    "A avaliação pré-operatória cardiovascular segue as diretrizes da ACC/AHA para cirurgias de médio e alto risco.",
+    "O tratamento de choque séptico requer ressuscitação volêmica agressiva com cristaloides isotônicos nas primeiras 3 horas.",
+    "Pacientes com insuficiência hepática grave apresentam coagulopatia secundária à redução da síntese de fatores de coagulação.",
+    "O rastreamento do câncer colorretal por colonoscopia é recomendado a partir dos 50 anos em pacientes de risco padrão.",
+    "A síndrome coronariana aguda sem supradesnivelamento de ST é tratada com antiagregação dupla e anticoagulação sistêmica.",
+    "O diagnóstico de lupus eritematoso sistêmico exige pelo menos quatro critérios do ACR/EULAR para confirmação.",
+    "A investigação de tromboembolismo pulmonar utiliza a escala de Wells combinada com dosagem de D-dímero e angiotomografia.",
+    "Pacientes com DPOC exacerbado requerem suporte ventilatório não invasivo quando pH arterial for inferior a 7,35.",
+    "A terapia de reposição hormonal na menopausa é contraindiciada em pacientes com histórico de trombose venosa profunda.",
+    "O manejo da cetoacidose diabética inclui hidratação intravenosa, insulinoterapia contínua e reposição de potássio.",
+    "A triagem neonatal ampliada detecta erros inatos do metabolismo como fenilcetonúria e hipotireoidismo congênito.",
+]
+alvo_tokens = 10000
+contexto_lista = []
+tokens_acumulados = 0
+
+while tokens_acumulados < alvo_tokens:
+    frase = random.choice(frases_medicas)
+    contexto_lista.append(frase)
+    tokens_acumulados += len(frase.split()) * 1.3  
+
+contexto_rag = " ".join(contexto_lista)
+
+
+tokens_raw = tokenizer(
+    contexto_rag,
+    return_tensors="pt",
+    truncation=False,        
+)
+
+n_tokens = tokens_raw["input_ids"].shape[1]
+print(f"\n[PASSO 2] Tokens no contexto RAG simulado: {n_tokens}")
+
+
+MAX_SUPORTADO = 2048  
+if n_tokens > MAX_SUPORTADO:
+    print(f" Contexto truncado para {MAX_SUPORTADO} tokens (limite do TinyLlama).")
+    print(f" Em produção com Llama-3 (8k–128k contexto), os {n_tokens} tokens seriam suportados.")
+    tokens_raw = tokenizer(
+        contexto_rag,
+        return_tensors="pt",
+        truncation=True,
+        max_length=MAX_SUPORTADO
+    )
+
+tokens = {k: v.to("cuda") for k, v in tokens_raw.items()}
+print(f"  Tokens efetivamente usados na GPU: {tokens['input_ids'].shape[1]}")
