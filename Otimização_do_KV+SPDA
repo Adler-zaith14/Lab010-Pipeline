@@ -1,0 +1,34 @@
+print("\n[PASSO 4] Recarregando modelo com SDPA + KV Cache ativado...")
+
+if 'model' in locals():
+    del model
+if 'saida' in locals():
+    del saida
+tokens_cpu = {k: v.cpu() for k, v in tokens.items()}
+del tokens
+torch.cuda.empty_cache()
+torch.cuda.reset_peak_memory_stats()
+
+tokens = {k: v.to("cuda") for k, v in tokens_cpu.items()}
+
+model_otimizado = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    quantization_config=conf_qlora,
+    device_map="auto"
+)
+
+model_otimizado.config.use_cache = True
+
+torch.cuda.reset_peak_memory_stats()
+inicio_opt = time.time()
+
+saida_opt = model_otimizado.generate(**tokens, max_new_tokens=100, do_sample=False)
+
+fim_opt = time.time()
+tempo_otimizado = fim_opt - inicio_opt
+vram_otimizado = torch.cuda.max_memory_allocated() / 1024**2
+
+texto_gerado_opt = tokenizer.decode(saida_opt[0][-100:], skip_special_tokens=True)
+print(f"  Saída (otimizado): {texto_gerado_opt[:200]}...")
+print(f"  Tempo otimizado:   {tempo_otimizado:.2f}s")
+print(f"  Pico VRAM:         {vram_otimizado:.2f} MB")
