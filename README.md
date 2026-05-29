@@ -48,17 +48,6 @@ O principal gargalo de memória em Transformers generativos vem de três frentes
 O FlashAttention-2 resolve o problema de *bandwidth*, não o problema de *capacidade*. Mesmo reorganizando os acessos à memória para trabalhar em blocos na SRAM, ele ainda precisa materializar o KV Cache inteiro na VRAM para toda a sequência de entrada — e esse cache cresce linearmente com o número de tokens: `O(n * d_model * n_layers)`. Para 2 milhões de tokens com um modelo de porte médio (32 camadas, d_model = 4096), apenas o KV Cache ocuparia dezenas de gigabytes, tornando inviável o uso em qualquer GPU de consumo ou mesmo em instâncias cloud de custo acessível. Além disso, a própria atenção full (mesmo com FlashAttention-2) exige que cada token atenda a todos os outros, o que, a 2 milhões de tokens, resulta em 4 × 10¹² operações por camada — computacionalmente proibitivo. É precisamente por esse motivo que a indústria está migrando para arquiteturas de **State Space Models (SSMs)** como o **Mamba**: em vez de manter um cache de toda a sequência vista até agora, o Mamba comprime o histórico em um vetor de estado oculto de tamanho fixo que é atualizado recorrentemente a cada novo token. Isso garante complexidade de memória **O(1)** em relação ao comprimento da sequência — o estado tem sempre o mesmo tamanho, independentemente de a sequência ter 1.000 ou 2.000.000 tokens — tornando o processamento de contextos ultra-longos viável sem explosão de VRAM.
 
 ---
-
-## Notas sobre o Ambiente
-
-### Sobre o FlashAttention-2
-
-O FlashAttention-2 exige compilação de extensões CUDA nativas, instalado com:
-
-```bash
-!pip install flash-attn --no-build-isolation
-
-
 ## Anexo 
 
 **Google Colab:**
@@ -69,3 +58,14 @@ O FlashAttention-2 exige compilação de extensões CUDA nativas, instalado com:
 O projeto utiliza o Git para controle de versão. A entrega final desta atividade foi devidamente versionada e identificada:
 * Versão atual: v1.0
 * Status: Concluído e sincronizado com o repositório remoto.
+## Notas sobre o Ambiente
+
+### Sobre o FlashAttention-2
+
+O FlashAttention-2 exige compilação de extensões CUDA nativas, instalado com:
+
+```bash
+!pip install flash-attn --no-build-isolation
+
+
+
