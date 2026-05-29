@@ -57,3 +57,15 @@ O FlashAttention-2 exige compilação de extensões CUDA nativas, instalado com:
 
 ```bash
 !pip install flash-attn --no-build-isolation
+
+
+## Anexo 
+
+**Google Colab:**
+[https://colab.research.google.com/drive/1y_QO88uSMfTBfU_u2TpsVeC3-pfUSFgM?usp=sharing]
+
+## Versionamento
+
+O projeto utiliza o Git para controle de versão. A entrega final desta atividade foi devidamente versionada e identificada:
+* Versão atual: v1.0
+* Status: Concluído e sincronizado com o repositório remoto.
